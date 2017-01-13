@@ -3,7 +3,9 @@
 # Synopsis: listfd <directory_name>
 #handle input parameter error
 #echo help message
-dirname=$1
-echo "the directories is $1"
-dirlist=`ls -l $1`
-echo $dirlist
+isDigit=$(echo "$1" | grep "[^0-9]") 
+if [ -z $isDigit ]
+then
+	echo "$1 is a digit"
+fi
+echo ""
