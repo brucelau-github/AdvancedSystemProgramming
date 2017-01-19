@@ -1,0 +1,125 @@
+Script started on Thu 19 Jan 2017 05:48:29 PM EST
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ cat fi[K[K-n fin[Kbonacci.sh
+     1	#!/bin/bash
+     2	# write a bash-shell script to calculate the Fibonacci numbers given by 
+     3	# if(n<2) f=n; else f= f(n-1)+f(n-2);
+     4	# author: bruce lau
+     5	# email : brucelau.email@gmail.com
+     6	# At university of windsor in Canada.
+     7	if [ $# -ne 1 ]
+     8	then
+     9		echo "useage: fibonacci.sh <numbers>"
+    10		exit 0
+    11	fi
+    12	if [ $1 -lt 2 ]
+    13	then 
+    14		if [ $1 -eq 0 ]; then 
+    15			echo "0"
+    16		else 
+    17			echo "0 1"
+    18		fi
+    19	
+    20		echo "the fibonacci of $1 is $1"
+    21		exit 0
+    22	fi
+    23	
+    24	n=2
+    25	fib1=0
+    26	fib2=1
+    27	fib3=0
+    28	printf "0 1"
+    29	# calculate the fibonacci
+    30	while [ $n -le $1 ]
+    31	do
+    32		fib3=$(( $fib1 + $fib2 ))
+    33		fib1=$fib2
+    34		fib2=$fib3
+    35		let "n = $(( $n + 1 ))"
+    36		printf " $fib3"
+    37	done
+    38	echo ""
+    39	echo "the fibonacci of $1 is $fib3"
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ cat -n fibonacci.sh[K[K[K[K[K[K[K[K[K[K[K[Kminimize.sh [K
+     1	#!/bin/bash
+     2	# write a bash-shell script to compress files, in the current directory 
+     3	# with some extensions
+     4	# Synopsis: minimize.sh <extension list>
+     5	# Example minimize.sh doc jpa text
+     6	# author: bruce lau
+     7	# email : brucelau.email@gmail.com
+     8	# At university of windsor in Canada on Jan 20, 2017
+     9	if [ $# -lt 1 ]
+    10	then
+    11		echo "useage: minimize.sh <extension list>"
+    12		echo "example: minimize.sh doc jpg txt. to compress all these files"
+    13		exit 0
+    14	fi
+    15	
+    16	if [ -e compress.tar ]
+    17	then
+    18		echo ""
+    19		echo "remove old file compress.tar"
+    20		rm -f compress.tar
+    21	fi
+    22	
+    23	for ext in $* 
+    24	do
+    25		echo "handling files with extension $ext"
+    26		tar rvf compress.tar --wildcards *.$ext
+    27		echo "done"
+    28		echo ""
+    29	done
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 
+useage: fibonacci.sh <numbers>
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 0
+0
+the fibonacci of 0 is 0
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 0[K1
+0 1
+the fibonacci of 1 is 1
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 1[K5[K2
+0 1 1
+the fibonacci of 2 is 1
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 2[K5
+0 1 1 2 3 5
+the fibonacci of 5 is 5
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 5[K10
+0 1 1 2 3 5 8 13 21 34 55
+the fibonacci of 10 is 55
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 10[K2[K[K20
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765
+the fibonacci of 20 is 6765
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 20[K[K50[K[K40
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229 832040 1346269 2178309 3524578 5702887 9227465 14930352 24157817 39088169 63245986 102334155
+the fibonacci of 40 is 102334155
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./fibonacci.sh 40[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kminimize.sh d[K
+useage: minimize.sh <extension list>
+example: minimize.sh doc jpg txt. to compress all these files
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./minimize.sh doc
+
+remove old file compress.tar
+handling files with extension doc
+file1.doc
+file2.doc
+file3.doc
+done
+
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ ./minimize.sh doc jpg
+
+remove old file compress.tar
+handling files with extension doc
+file1.doc
+file2.doc
+file3.doc
+done
+
+handling files with extension jpg
+file1.jpg
+file2.jpg
+file3.jpg
+done
+
+liu1ee@charlie:~/workspace/AdvancedSystemProgramming/labs/lab2$ exit
+exit
+
+Script done on Thu 19 Jan 2017 05:51:06 PM EST
