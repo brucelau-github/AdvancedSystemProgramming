@@ -1,0 +1,151 @@
+Script started on Thu 09 Feb 2017 02:21:38 PM EST
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab5$ cat lab5.c
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+int isvowels(int c);
+int isvowels(int c) {
+	return c == 'a' || c == 'e' || c=='o' || c=='u' || c=='i';
+}
+int main(int argc, char *argv[])
+{
+	int fd1, fd2;
+	char buffer[100];
+	long int n1;
+	int n_digits=0,
+		n_characters=0,
+		n_spaces=0,
+		n_punctulation=0,
+		n_vowels=0,
+		n_cases=0;
+
+	if(((fd1 = open(argv[1], O_RDONLY)) == -1) ||
+	  ((fd2 = open(argv[2], O_CREAT|O_WRONLY|O_TRUNC,0700)) == -1))
+	{
+		perror("file problem ");
+		exit(1);
+	}
+
+	while((n1=read(fd1, buffer, 100)) > 0)
+  {
+    //read characters
+    int lenOfBuffer = strlen(buffer);
+    char *c=buffer;
+    int i = 0;
+    while( c < (buffer+n1) ) {
+      if(isdigit(*c)) {
+        n_digits++;
+      }
+			if (ispunct(*c)) {
+				n_punctulation++;
+			}
+			if (isspace(*c)) {
+				n_spaces++;
+			}
+			if (isalpha(*c)) {
+				n_characters++;
+				if(isvowels(*c)) {
+					n_vowels++;
+				}
+				if(islower(*c)) {
+					n_cases++;
+					*c = toupper(*c);
+				}
+			}
+			c++;
+    }
+    if(write(fd2, buffer, n1) != n1)
+    {
+      perror("writing problem ");
+      exit(3);
+    }
+
+  }
+	// Case of an error exit from the loop
+	if(n1 == -1)
+	{
+		perror("Reading problem ");
+		exit(2);
+	}
+
+	close(fd1);
+	close(fd2);
+	printf("Number of spaces: %d\n", n_spaces);
+	printf("Number of characters: %d\n", n_characters);
+	printf("Number of vowels: %d\n", n_vowels);
+	printf("Number of digits: %d\n", n_digits);
+	printf("Number of punctuations: %d\n", n_punctulation);
+	printf("Converted: %d cases\n", n_cases);
+	exit(0);
+}
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab5$ gcc lab5.c
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab5$ gcc lab5.c -o lab5liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab5$ cat input.txt
+The recall has now expanded to include all flavours of PC Organics strained baby food pouches. Specifically, that would include:
+
+    PC Organics Apple, Blueberry & Green Pea  strained baby food, 128 mL.
+    PC Organics Apple Crisp Muffin flavour  puree snack, 128 mL
+    PC Organics Apple, Carrot, Apricot & Millet  strained baby Food, 128 mL
+    PC Organics Banana, Sweet Potato & Blueberry strained baby food, 128 mL
+    PC Organics Apple strained baby food, 128 mL
+    PC Organics Apple, Banana & Blueberry with Yogurt strained baby food, 128 mL
+    PC Organics Apple, Banana & Strawberry with Yogurt strained baby food , 128 mL
+    PC Organics Apple Cherry strained baby food, 128 mL
+    PC Organics Sweet Potato, Apple and Mango strained baby food, 128 mL
+    PC Organics Peach Maple Cobbler Flavour puree snack, 128 mL
+    PC Organics Banana Apple & Carrot strained baby food, 128 mL
+    PC Organics Pumpkin, Apple, Peach & Buckwheat strained baby food, 128 mL
+    PC Organics Prune, Apple, Butternut Squash & Quinoa strained baby food, 128 mL
+    PC Organics Pear strained baby food, 128 mL
+    PC Organics Mango, Apple, Carrot & Peach strained baby food, 128 mL
+    PC Organics Blackberry Cobbler Flavour puree snack, 128 mL
+    PC Organics Banana & Kiwi strained baby food, 128 mL
+    PC Organics Mango strained baby food, 128 mL
+    PC Organics Banana & Raspberry strained baby food, 128 mL
+    PC Organics Banana, Apple, Apricot & Rice strained baby food, 128 mL
+    PC Organics Banana Bread Flavour puree snack, 128 mL
+    PC Organics Pear, Apple and Broccoli strained baby food, 128 mL
+    PC Organics Sweet Potato, Banana & Apricot strained baby food, 128 mL
+    PC Organics Tropical Twist Smoothie with Greek Yogurt puree snack, 128 mL
+    PC Organics Banana, Mango & Apple with Yogurt strained baby food, 128 mL
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab5$ ./lab5 input.txt ouput.txt
+Number of spaces: 398
+Number of characters: 1295
+Number of vowels: 410
+Number of digits: 75
+Number of punctuations: 61
+Converted: 1107 cases
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab5$ cat ouput.txt
+THE RECALL HAS NOW EXPANDED TO INCLUDE ALL FLAVOURS OF PC ORGANICS STRAINED BABY FOOD POUCHES. SPECIFICALLY, THAT WOULD INCLUDE:
+
+    PC ORGANICS APPLE, BLUEBERRY & GREEN PEA  STRAINED BABY FOOD, 128 ML.
+    PC ORGANICS APPLE CRISP MUFFIN FLAVOUR  PUREE SNACK, 128 ML
+    PC ORGANICS APPLE, CARROT, APRICOT & MILLET  STRAINED BABY FOOD, 128 ML
+    PC ORGANICS BANANA, SWEET POTATO & BLUEBERRY STRAINED BABY FOOD, 128 ML
+    PC ORGANICS APPLE STRAINED BABY FOOD, 128 ML
+    PC ORGANICS APPLE, BANANA & BLUEBERRY WITH YOGURT STRAINED BABY FOOD, 128 ML
+    PC ORGANICS APPLE, BANANA & STRAWBERRY WITH YOGURT STRAINED BABY FOOD , 128 ML
+    PC ORGANICS APPLE CHERRY STRAINED BABY FOOD, 128 ML
+    PC ORGANICS SWEET POTATO, APPLE AND MANGO STRAINED BABY FOOD, 128 ML
+    PC ORGANICS PEACH MAPLE COBBLER FLAVOUR PUREE SNACK, 128 ML
+    PC ORGANICS BANANA APPLE & CARROT STRAINED BABY FOOD, 128 ML
+    PC ORGANICS PUMPKIN, APPLE, PEACH & BUCKWHEAT STRAINED BABY FOOD, 128 ML
+    PC ORGANICS PRUNE, APPLE, BUTTERNUT SQUASH & QUINOA STRAINED BABY FOOD, 128 ML
+    PC ORGANICS PEAR STRAINED BABY FOOD, 128 ML
+    PC ORGANICS MANGO, APPLE, CARROT & PEACH STRAINED BABY FOOD, 128 ML
+    PC ORGANICS BLACKBERRY COBBLER FLAVOUR PUREE SNACK, 128 ML
+    PC ORGANICS BANANA & KIWI STRAINED BABY FOOD, 128 ML
+    PC ORGANICS MANGO STRAINED BABY FOOD, 128 ML
+    PC ORGANICS BANANA & RASPBERRY STRAINED BABY FOOD, 128 ML
+    PC ORGANICS BANANA, APPLE, APRICOT & RICE STRAINED BABY FOOD, 128 ML
+    PC ORGANICS BANANA BREAD FLAVOUR PUREE SNACK, 128 ML
+    PC ORGANICS PEAR, APPLE AND BROCCOLI STRAINED BABY FOOD, 128 ML
+    PC ORGANICS SWEET POTATO, BANANA & APRICOT STRAINED BABY FOOD, 128 ML
+    PC ORGANICS TROPICAL TWIST SMOOTHIE WITH GREEK YOGURT PUREE SNACK, 128 ML
+    PC ORGANICS BANANA, MANGO & APPLE WITH YOGURT STRAINED BABY FOOD, 128 ML
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab5$ exit
+exit
+
+Script done on Thu 09 Feb 2017 02:23:00 PM EST

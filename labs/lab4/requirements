@@ -1,0 +1,21 @@
+For this lab you will need to write and fully document a C program that can do the following:
+
+1. use malloc() to allocate memory sufficient to store a list of integers.Note the list can be of any size specified by user input.
+
+2. populate the list with integers entered interactively from the user interface.
+
+3. Display the list of integers on the screen.
+
+4. free() the entire memory used by the list.
+
+Tips: Consider using a self-referential structure:
+
+struct number
+
+{
+
+    int value;
+
+    struct number* ptrNext;
+
+};
