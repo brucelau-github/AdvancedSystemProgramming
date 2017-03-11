@@ -1,0 +1,66 @@
+Script started on Sat 11 Mar 2017 10:36:05 AM EST
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ cat serverside.log  [KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[Klab8server.c 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#define PFILE "/tmp/group11server"
+#define LOGFILE "group11server_log"
+
+int main(int argc, char *argv[]) {
+	int pfd,lfd;
+	char ch;
+
+	//check if pipe file exists.
+	unlink(PFILE);
+	//make pipe file
+	if(mkfifo(PFILE, 0777) != 0) {
+		printf("fail to create a pipe file in %s",PFILE);
+		exit(EXIT_FAILURE);
+	}
+	//read message from client
+	while(1) {
+		printf("Waiting for a client\n");
+		pfd = open(PFILE, O_RDONLY);
+		lfd = open(LOGFILE, O_CREAT | O_WRONLY | O_APPEND, 0777);
+		chmod(LOGFILE, 0777);
+		if(pfd < 0) {
+			printf("fail to create a pipe file: %s\n",PFILE);
+			exit(EXIT_FAILURE);
+		}	
+		if(lfd < 0) {
+			printf("fail to create a log file: %s\n",LOGFILE);
+			exit(EXIT_FAILURE);
+		}	
+		printf("new client is accepted\n");
+		while(read(pfd, &ch, 1) == 1) {
+			printf("%c", ch);
+			write(lfd, &ch, 1);
+		}
+		close(pfd);
+		close(lfd);
+		
+	}
+}
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ ./lab8server &
+[1] 17634
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ Waiting for a client
+new client is accepted
+17837 /home/liu1ee/workspace/AdvancedSystemProgramming/labs/lab8 Jianye Liu 10452249Waiting for a client
+
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ fg
+./lab8server
+^C
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ ca[K[Kls /tmp/group11servver 
+[0m[40;33m/tmp/group11server[0m
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ ls /tmp/group11servver M[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C /tmp/group11ser[1@vM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C- /tmp/group11se[1@rM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cl /tmp/group11s[1@eM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+
+prwxr-xr-x 1 liu1ee temp 0 Mar 11 10:37 [0m[40;33m/tmp/group11server[0m
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ ls -l /tmp/group11sserver M[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C/tmp/group11serv[C[C [KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4P./lab8server &
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcat lab8server_[K[K[K[K[K[K[K[K[K[K[Kgroup11server_llog 
+17837 /home/liu1ee/workspace/AdvancedSystemProgramming/labs/lab8 Jianye Liu 10452249liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ exit
+exit
+
+Script done on Sat 11 Mar 2017 10:39:06 AM EST

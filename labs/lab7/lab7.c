@@ -28,15 +28,15 @@
 #include <sys/wait.h>
 
 void pEvent() {
-	printf("the parent died or terminated.\n");
+	printf("the parent died or terminated before the child.\n");
 }
 
 void cEvent() {
-	printf("the child died or terminated.\n");
+	printf("the child died or terminated before the parent.\n");
 }
 
 int main(int argc, char *argv[]) {
-	// process the arguments 
+	// process the arguments
 	if (argc != 3) {
 		printf("Arguments error!\n");
 		printf("Usage:\n");
@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
 		printf("%s [parent TTL] [child TTL]\n",argv[0]);
 		exit(-1);
 	}
+
 	//process the code
 
 	int status = -1;
@@ -68,21 +69,23 @@ int main(int argc, char *argv[]) {
 		//child process tasks
 		//bind parent event
 		signal(SIGALRM,pEvent);
-		
+
 		printf("I am the child with pid %d of process id %d\n",getpid(),getppid());
 		int n = cttl;
 
 		while(n--) {
-			sleep(1); 
+			sleep(1);
 			printf("child process's time to live in %ds\n",n);
 		}
-		//send signal to parent before dying	
-		if ( kill(getppid(),SIGALRM) == -1 ) printf("erro on sending message by child.\n");
-		_exit(0);
+		//send signal to parent before dying and ingnore error.
+		//if ( kill(getppid(),SIGALRM) == -1 ) printf("the parent process was dead before the child.\n");
+		kill(getppid(),SIGALRM);
+		exit(0);
 
 	} else if(pid < 0) {
 		printf("Error to fork new child process.\n");
 	}
+
 	//parents tasks
 	cpid = pid;
 	printf("I am the parent with pid %d, start to wait the child %d\n",getpid(),cpid);
@@ -93,8 +96,9 @@ int main(int argc, char *argv[]) {
 		sleep(1);
 		printf("parent process's time to live in %ds.\n",m);
 	}
-	//send signal to child beofe dying	
-	if ( kill(cpid,SIGALRM) == -1 ) printf("erro on sending message by parent\n");
+	//send signal to child beofe dying and ignore the error message.
+	//if ( kill(cpid,SIGALRM) == -1 ) printf("the child process was dead before the parent\n");
+	kill(cpid,SIGALRM);
 	exit(0);
 
 }
