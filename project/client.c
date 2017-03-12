@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #define SERVER_PORT 5000
 
@@ -15,8 +16,8 @@ int main(int argc, char *argv[]) {
 	struct sockaddr_in localAddr, srvAddr;
 	struct hostent *host;
 
-	if(argc < 2) {
-		printf("usage: %s <servername> \n", argv[0]);
+	if(argc < 3) {
+		printf("usage: %s <servername> <data> \n", argv[0]);
 	}
 	
 	host = gethostbyname(argv[1]); 
@@ -48,13 +49,31 @@ int main(int argc, char *argv[]) {
 		perror("fail to connect remote address");
 		exit(EXIT_FAILURE);
 	}
-	char msg[100];
-	while(scanf("%s",msg) != -1) {
-		if(send(sock, msg, strlen(msg) +1, 0) <0 ) {
-			perror("fail to connect remote address");
-			exit(EXIT_FAILURE);
-			
-		}
-	}
+	//open a file
+	FILE *imgfd;
+	struct stat *imgstat;
+	imgfd = fopen(argv[2], "r");
+	int imgfsize;
+	stat(argv[2], imgstat);
+	imgfsize = imgstat->st_size;
+	printf("sending picture size:%d\n", imgfsize);
+//	write(sock, &imgfsize, sizeof(imgfsize));
+
+	char imgbuffer[200];
+	while(!feof(imgfd)) {
+		fread(imgbuffer, 1, sizeof(imgbuffer), imgfd);
+		write(sock, imgbuffer, sizeof(imgbuffer));
+		bzero(imgbuffer,sizeof(imgbuffer));
+   	}
+	fclose(imgfd);
+
+//	char msg[100];
+//	while(scanf("%s",msg) != -1) {
+//		if(send(sock, msg, strlen(msg) +1, 0) <0 ) {
+//			perror("fail to connect remote address");
+//			exit(EXIT_FAILURE);
+//			
+//		}
+//	}
 
 }
