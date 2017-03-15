@@ -66,7 +66,9 @@ int main(int argc, char *argv[]){
 				fwrite(buf, 1, n, fp);
 			}
 			fclose(fp);
+			if(n < 0) perror("recv error\n");
 			printf("finished!\n");
+
 			//execute python
 			FILE *cmdpipe;
 			char stdoutbuff[1035];
@@ -81,7 +83,9 @@ int main(int argc, char *argv[]){
 				printf("%s\n",stdoutbuff);
 			}
 			pclose(fp);
-			if(n < 0) perror("recv error\n");
+
+			//close socket
+			close(clientsock);
 			exit(EXIT_SUCCESS);
 		}
 		//parent process.
