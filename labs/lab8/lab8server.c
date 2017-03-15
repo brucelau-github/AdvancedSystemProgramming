@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define PFILE "/tmp/group11server"
+#define PFILE "/tmp/group11_server"
 #define LOGFILE "group11server_log"
 
 int main(int argc, char *argv[]) {
@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
 		printf("fail to create a pipe file in %s",PFILE);
 		exit(EXIT_FAILURE);
 	}
+	chmod(PFILE,0777);
 	//read message from client
 	while(1) {
 		printf("Waiting for a client\n");

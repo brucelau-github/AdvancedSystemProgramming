@@ -1,0 +1,40 @@
+Script started on Sun 12 Mar 2017 03:13:32 PM EDT
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ 
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ exitscreen -r[5Pexit[K[K[K[Kcat client_test.c 
+#include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define PFILE "/tmp/group11_server"
+
+int main(int argc, char *argv[]) {
+	int fd;
+	char ch;
+	while((fd=open(PFILE,O_WRONLY))==-1){
+		fprintf(stderr, "trying to connect the server\n");
+		sleep(1);
+	}
+
+	printf("Connected: type your full name and student id to be sent\n");
+	char head[100];
+	sprintf(head, "%d", getpid());
+	strcat(head, " ");
+	getcwd(head + strlen(head));
+	strcat(head, " ");
+	fgets(head + strlen(head), 20, stdin);
+	printf("%s\n",head);
+	write(fd, head, strlen(head));
+	close(fd);
+}
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ cat client_test.c exit[Kscreen -r[5Pexitgit pushcommit -am "image upload"status[Kadd -Astatusrm city.jpg [K[K[K[K[K[K[K[K[K[K[K[Kg[K!gcc
+gcc client.c -o client
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ gcc client_test.c -o test
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ ./test 
+Connected: type your full name and student id to be sent
+Jianye Liu 201   104522497
+17232 /home/liu1ee/workspace/AdvancedSystemProgramming/labs/lab8 Jianye Liu 10452249
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab8$ exit
+exit
+
+Script done on Sun 12 Mar 2017 03:14:31 PM EDT

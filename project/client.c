@@ -61,11 +61,12 @@ int main(int argc, char *argv[]) {
 
 	char imgbuffer[200];
 	while(!feof(imgfd)) {
-		fread(imgbuffer, 1, sizeof(imgbuffer), imgfd);
+		fread(imgbuffer, sizeof(imgbuffer), 1, imgfd);
 		write(sock, imgbuffer, sizeof(imgbuffer));
 		bzero(imgbuffer,sizeof(imgbuffer));
    	}
 	fclose(imgfd);
+	close(sock);
 
 //	char msg[100];
 //	while(scanf("%s",msg) != -1) {

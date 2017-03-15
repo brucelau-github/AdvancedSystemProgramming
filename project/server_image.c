@@ -58,6 +58,7 @@ int main(int argc, char *argv[]){
 				write(STDOUT_FILENO, buf, n);
 				fwrite(buf, 1, n, fp);
 			}
+			if()
 			fclose(fp);
 			if(n < 0) perror("recv error\n");
 		}
