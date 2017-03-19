@@ -65,10 +65,10 @@ int main(int argc, char *argv[]) {
 		write(sock, imgbuffer, sizeof(imgbuffer));
 		bzero(imgbuffer,sizeof(imgbuffer));
    	}
-	
+	printf("finished!\n waiting for feedback\n");
 	char sockbuf[500];
 	read(sock, sockbuf, sizeof(sockbuf));
-	prinf("the result is %s",sockbuf);
+	printf("the result is %s",sockbuf);
 	fclose(imgfd);
 	close(sock);
 }

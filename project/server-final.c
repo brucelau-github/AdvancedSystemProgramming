@@ -71,6 +71,7 @@ int main(int argc, char *argv[]){
 			while( (n = recv(clientsock, buf, BUFLEN, 0)) > 0 ) {
 				printf(".");
 				fwrite(buf, 1, n, fp);
+				if(n < BUFLEN) break;
 			}
 			fclose(fp);
 			if(n < 0) perror("recv error\n");
@@ -105,21 +106,6 @@ int main(int argc, char *argv[]){
 			send(clientsock, outbuffer, strlen(outbuffer), MSG_CONFIRM);
 			fclose(outfp);
 
-
-			//execute python
-			FILE *cmdpipe;
-			char stdoutbuff[1035];
-
-			cmdpipe = popen( PYTHONCMD, "r" );
-			if(cmdpipe == NULL) {
-				printf("Failed to run python command.\n");
-				exit(EXIT_FAILURE);
-			}
-
-			while (fgets(stdoutbuff, sizeof(stdoutbuff)-1, cmdpipe)) {
-				printf("%s\n",stdoutbuff);
-			}
-			pclose(fp);
 
 			//close socket
 			close(clientsock);
