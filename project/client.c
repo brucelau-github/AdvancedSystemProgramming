@@ -65,16 +65,10 @@ int main(int argc, char *argv[]) {
 		write(sock, imgbuffer, sizeof(imgbuffer));
 		bzero(imgbuffer,sizeof(imgbuffer));
    	}
+	
+	char sockbuf[500];
+	read(sock, sockbuf, sizeof(sockbuf));
+	prinf("the result is %s",sockbuf);
 	fclose(imgfd);
 	close(sock);
-
-//	char msg[100];
-//	while(scanf("%s",msg) != -1) {
-//		if(send(sock, msg, strlen(msg) +1, 0) <0 ) {
-//			perror("fail to connect remote address");
-//			exit(EXIT_FAILURE);
-//			
-//		}
-//	}
-
 }
