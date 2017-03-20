@@ -57,18 +57,20 @@ int main(int argc, char *argv[]) {
 	stat(argv[2], imgstat);
 	imgfsize = imgstat->st_size;
 	printf("sending picture size:%d\n", imgfsize);
-//	write(sock, &imgfsize, sizeof(imgfsize));
-
-	char imgbuffer[200];
+	char imgbuffer[300];
 	while(!feof(imgfd)) {
 		fread(imgbuffer, sizeof(imgbuffer), 1, imgfd);
 		write(sock, imgbuffer, sizeof(imgbuffer));
 		bzero(imgbuffer,sizeof(imgbuffer));
    	}
-	printf("finished!\n waiting for feedback\n");
-	char sockbuf[500];
+	write(sock,"\n", 2);
+	printf("finished!\nwaiting for feedback\n");
+	char sockbuf[500],out[500];
 	read(sock, sockbuf, sizeof(sockbuf));
-	printf("the result is %s",sockbuf);
+	//remove \n in the string;
+	strncpy(out,sockbuf,strlen(sockbuf)-5);
+	printf("the prediction is\n");
+	printf("%s\n",out);
 	fclose(imgfd);
 	close(sock);
 }

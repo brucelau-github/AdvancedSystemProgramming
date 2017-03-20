@@ -16,10 +16,7 @@
 #define PYTHONCMD "python simplep.py"
 
 void eventhandler() {
-	exit(0);
-}
-void userevent1() {
-	printf("resume to run!\n");
+	exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[]){
@@ -28,7 +25,6 @@ int main(int argc, char *argv[]){
 	struct sockaddr_in cliAddr,srvAddr;
 	//register signal event
 	signal(SIGINT, eventhandler);
-	signal(SIGUSR1, userevent1);
 	/*create socket*/
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock < 0) {
@@ -66,24 +62,27 @@ int main(int argc, char *argv[]){
 		if( (pid=fork()) == 0) {
 		
 			//read data
-			int n,counter;
+			int n;
 			char buf[BUFLEN];
 			unlink(FILENAME);
 			FILE *fp;
 			fp = fopen(FILENAME, "w+");
-			while(1) {
-				n = recv(clientsock, buf, BUFLEN, 0);
-				counter += n;
-				if(n < BUFLEN) {
-					fwrite(buf, 1, n-2, fp);
-					bzero(buf,sizeof(buf));
-					printf("%d \n",counter);
-					break;
-				}
-				printf("%d ",counter);
-				fwrite(buf, 1, n, fp);
-				bzero(buf,sizeof(buf));
+			recv(clientsock, buf, BUFLEN, 0);
+			if(strncmp(buf,"IMG_BEGIN", strlen("IMG_BEGIN")) != 0) {
+				printf("error img header\n");
+				exit(EXIT_FAILURE);
 			}
+			printf("receiving image data.%s\n",buf);
+			bzero(buf,sizeof(buf));
+			recv(clientsock, buf, BUFLEN, 0);
+			printf("receiving image data.%s\n",buf);
+//			while(1) {
+//				n = recv(clientsock, buf, BUFLEN, 0);
+//				if(strncmp(buf,"IMG_END",strlen("IMG_END")) == 0) break;
+//				printf("\n%s,%d",buf,strncmp(buf,"IMG_END",strlen("IMG_END")));
+//				fwrite(buf, 1, n, fp);
+//				bzero(buf,sizeof(buf));
+//			}
 			fclose(fp);
 			
 			printf("finished!\n");
@@ -94,38 +93,17 @@ int main(int argc, char *argv[]){
 			fwrite(buf, strlen(buf), 1, fp);
 			fclose(fp);
 			
-			//send a signal to py_server
-			fp = fopen(PY_SERVER_PID_FILE,"r");
-			if(fp == NULL ) {
-				printf("Failed to open %s.\n",PY_SERVER_PID_FILE);
-				exit(EXIT_FAILURE);
-			}
-			char pidbuffer[100];
-			fread(pidbuffer,sizeof(pidbuffer),1,fp);
-			fclose(fp);
-			kill( atoi(pidbuffer), SIGUSR1); 
-
-			//wait for py server signal
-			pause();
-
-			//read the output 
-			FILE *outfp;
-			outfp = fopen("/tmp/py_server_out","r");
-			char outbuffer[5000];
-			fread(outbuffer, sizeof(outbuffer), 1, outfp);
-			printf("the content of the file is %s",outbuffer);
-			send(clientsock, outbuffer, strlen(outbuffer), MSG_CONFIRM);
-			send(clientsock, "\n", 2, MSG_CONFIRM);
-			fclose(outfp);
-
-
-			//close this socket and exit child process
+			printf("session is finished!\n");
+			//close socket
 			close(clientsock);
 			exit(EXIT_SUCCESS);
 		}
-		//parent process will wait all children to return.
+		//parent process.
+		//waitpid( pid, &status, WNOHANG);
 		waitpid( -1, &status, WNOHANG); //wait for any child
 
 	}
+		
+
 
 }
