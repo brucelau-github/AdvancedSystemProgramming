@@ -9,6 +9,7 @@
 #include <stdlib.h>
 
 #define SERVER_PORT 5000
+#define LOGFILE "server_log"
 #define BUFLEN 300
 void exitEvent(){
 	printf("exit\n");
@@ -66,12 +67,17 @@ int main(int argc, char *argv[]){
 }
 void childprocess(int socketd) {
 	
+	FILE *fd = fopen(LOGFILE,"a+");	
 	//print a messge
+	
 	printf("connected a client!");
+	//wite log file
+	fwrite("connected a client!\n",21,1,fd);
 	//read data,initailise the variable;
 	int n,sum;
 	char buf[BUFLEN],sumstr[200]; //sum to string
 	sum = 0;
+	//open a log file
 	while(1) {
 		//clear buffer
 		bzero(buf,BUFLEN);
@@ -83,6 +89,9 @@ void childprocess(int socketd) {
 			//convert int to str  
 			sprintf(sumstr,"%d\n",sum);
 			//print the message out
+			fwrite("the sum is: ",20,1,fd);
+			fwrite(sumstr,strlen(sumstr),1,fd);
+			fwrite("\n",2,1,fd);
 			printf("send the sum %s",sumstr);
 			//send to client
 			send(socketd,sumstr,strlen(sumstr),MSG_CONFIRM);
@@ -92,10 +101,15 @@ void childprocess(int socketd) {
 		//compute the sum
 		sum += atoi(buf);
 		//print information on console screen
+		//log file
+		fwrite(buf,strlen(buf),1,fd);
+		fwrite("\n",2,1,fd);
 		printf("%s\n",buf);
 		printf("%d\n",sum);
 
 	}
+	//close logfile
+	fclose(fd);
 	if(n < 0) perror("recv error\n");
 
 }
