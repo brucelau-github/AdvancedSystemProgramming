@@ -47,15 +47,23 @@ int main(int argc, char *argv[])
 
 	while(1)
 	{
-		fgets(message,255,stdin);
-		write(server, message, strlen(message)+1);
-		if (strcmp(message,"END")==0)
+		if(read(server, message, 255)<0)
 		{
-			read(server,message,255);
-			fprintf(stderr, "sum is %s\n", message);
-			exit(0);
-
+			fprintf(stderr, "read() error\n");
+			exit(3);
 		}
+
+		fprintf(stderr, "Server’s messgae: %s\n",message);
+		fprintf(stderr, "Enter the $ sign to quit or a message for the server\n");
+		
+		fgets(message, 254, stdin);
+		if(message[0] == '$')
+		{
+			close(server);
+			exit(0);
+		}
+
+		write(server, message, strlen(message)+1);
 	}
 }
 

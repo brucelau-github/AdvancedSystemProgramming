@@ -1,36 +1,27 @@
-// 1. The program disables the CTRL-C and CTRL-Z sensitivity. (be careful if your program hands to do the ps command and kill the process)
-
-// 2. The program implements the timer alarm.
-
-// Logic of the program:
-
-// The program will launch a child.
-
-// The child will stay alive for a specified number of seconds between 1 and 10 (by a parameter) and then terminates.
-
-// The parent will stay alive for a specified number of seconds between 1 and 10 (by parameter) and then terminates.
-
-// Each of the child and parent will print a count-down every second to display how many seconds they have to live.
-
-// Consider the cases your program should report:
-
-// if the child dies before the parent dies: parent declares that the child is dead by displaying a message on the screen
-
-// if the child dies after the parent dies: the child declares it is an orphan by displaying a message on the screen
-
-// Test your code under the two circumstances and use a script file to log and submit your output.
-
+/* 1. The program disables the CTRL-C and CTRL-Z sensitivity. 
+ * (be careful if your program hands to do the ps command and kill the process)
+ *  2. The program implements the timer alarm.
+ *  Logic of the program:
+ *  The program will launch a child.
+ *  The child will stay alive for a specified number of seconds between 1 and 10 (by a parameter) and then terminates.
+ *  The parent will stay alive for a specified number of seconds between 1 and 10 (by parameter) and then terminates.
+ *  Each of the child and parent will print a count-down every second to display how many seconds they have to live.
+ *  Consider the cases your program should report:
+ *  if the child dies before the parent dies: parent declares that the child is dead by displaying a message on the screen
+ *  if the child dies after the parent dies: the child declares it is an orphan by displaying a message on the screen
+ * Test your code under the two circumstances and use a script file to log and submit your output.
+*/
 #include <sys/signal.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
+//parent event handler
 void pEvent() {
 	printf("the parent died or terminated before the child.\n");
 }
-
+//child event hander
 void cEvent() {
 	printf("the child died or terminated before the parent.\n");
 }
@@ -56,8 +47,8 @@ int main(int argc, char *argv[]) {
 	//process the code
 
 	int status = -1;
+
 	pid_t pid,cpid;
-	//disable CTL-C and CTL-Z to signal
 	signal(SIGINT,SIG_IGN);
 	signal(SIGTSTP,SIG_IGN);
 	//bind child event
@@ -87,9 +78,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	//parents tasks
-	cpid = pid;
+	cpid = pid; //get child pid
 	printf("I am the parent with pid %d, start to wait the child %d\n",getpid(),cpid);
-	waitpid(pid,&status,1);
+	waitpid(cpid,&status,1); //no waitnohungup
 
 	int m = pttl;
 	while(m--) {

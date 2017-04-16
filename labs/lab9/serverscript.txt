@@ -1,0 +1,19 @@
+Script started on Sun 26 Mar 2017 05:45:30 PM EDT
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab9$ gcc server[1Pscreen -r[1Pgit diffstatuscommit -am "fix configlict"[15Pmerge commit[6Pstatusmerge --continuediff[Kvi nets/resnet_v2.py[12Pgit diffvi nets/resnet_v2.py[12Pgit diffvi deployment/model_deploy.pygit diff[Kvi train_image_classifier.py cd slim/[Kgit diffmerge master diff[Kcd slim/vi train_image_classifier.py git diff[Kvi deployment/model_deploy.pygit diff[Kvi nets/resnet_v2.py[12Pgit diffvi nets/resnet_v2.py[12Pgit diffmerge --continue[10Pstatusmerge commitcommit -am "fix configlict"status[K[2Pdiffscreen -rgcc server[K[K[K[K[K[Kserver.c 0[K-o ser
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab9$ ./server[K[K[K
+./ser: start to wait connetions from client on TCP port 5000
+./ser: start to wait connetions from client on TCP port 5000
+connected a client!1
+1
+2
+3
+3
+6
+4
+10
+send the sum 10
+^Cexit
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab9$ exit
+exit
+
+Script done on Sun 26 Mar 2017 05:46:48 PM EDT

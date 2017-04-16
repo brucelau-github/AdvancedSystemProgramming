@@ -1,0 +1,17 @@
+Script started on Sun 26 Mar 2017 05:46:11 PM EDT
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab9$ gcc client.c 0[K-o cli
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab9$ ./sci[K[K[Kcli localsho[K[K[Khost
+enter integer to send the server
+ and press END to finish!
+The 1 integer:1
+The 2 integer:2
+The 3 integer:3
+The 4 integer:4
+The 5 integer:END
+the sum is 10
+
+Bye!
+liu1ee@alpha:~/workspace/AdvancedSystemProgramming/labs/lab9$ exit
+exit
+
+Script done on Sun 26 Mar 2017 05:46:39 PM EDT
